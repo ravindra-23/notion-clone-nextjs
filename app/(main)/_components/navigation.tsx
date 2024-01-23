@@ -2,7 +2,10 @@
 
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+
 import { useMediaQuery } from "usehooks-ts";
+import { useSearch } from "@/hooks/use-search";
+
 import { UserItem } from "./user-item";
 import { Item } from "./item";
 import { cn } from "@/lib/utils";
@@ -11,6 +14,7 @@ import { toast } from "sonner";
 import {
   ChevronsLeft,
   MenuIcon,
+  Plus,
   PlusCircle,
   Search,
   Settings,
@@ -22,6 +26,7 @@ import { DocumentList } from "./document-list";
 
 export const Navigation = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const search = useSearch();
   const pathname = usePathname(); //with user click any document sidebar collapses
 
   const [isResetting, setIsResetting] = useState(false);
@@ -141,13 +146,14 @@ export const Navigation = () => {
 
         <div>
           <UserItem />
-          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
           <Item label="Settings" icon={Settings} onClick={() => {}} />
           <Item icon={PlusCircle} label="New Page" onClick={handleCreate} />
         </div>
 
         <div className="mt-4">
           <DocumentList />
+          <Item onClick={handleCreate} icon={Plus} label="Add a page" />
         </div>
 
         <div
