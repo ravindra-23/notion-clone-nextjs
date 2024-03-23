@@ -1,7 +1,7 @@
 "use Client";
 
 import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 import { useMediaQuery } from "usehooks-ts";
 import { useSearch } from "@/hooks/use-search";
@@ -25,6 +25,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { DocumentList } from "./document-list";
 import { Navbar } from "./navbar";
+import { Router } from "next/router";
 
 export const Navigation = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -32,6 +33,7 @@ export const Navigation = () => {
   const settings = useSettings();
   const pathname = usePathname(); //with user click any document sidebar collapses
   const params = useParams();
+  const router = useRouter();
 
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
@@ -119,7 +121,9 @@ export const Navigation = () => {
   };
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" });
+    const promise = create({ title: "Untitled" }).then((documentId) =>
+      router.push(`/documents/${documentId}`)
+    );
     toast.promise(promise, {
       loading: "Create New Note...",
       success: "New Note Created!",
